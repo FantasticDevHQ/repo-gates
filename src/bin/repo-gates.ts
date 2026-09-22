@@ -34,7 +34,8 @@ Commands:
   check-debt [--init]       Debt-marker (TODO/FIXME) ratchet (--init seeds the allowlist)
   check-circular [--init]   Circular-import ratchet (--init seeds the allowlist)
   check-secrets [--init]    Secret-shaped-string ratchet (--init seeds the allowlist)
-  check-coverage [--init]   Per-package coverage floors (--init seeds; --skip-run reuses summaries)
+  check-coverage [--init] [--skip-run] [--partial]
+                            Per-package floors; --partial holds unrun packages, incompatible with --init
   check-bundle-size [--init] Bundle raw+gzip+chunk ratchet (--init seeds)
   check-agents              Validate AGENTS.md script/path references resolve
   check-docs-coverage       PR surface-vs-docs gate (no-op outside a PR context)
@@ -85,7 +86,7 @@ if (cmd === "init") {
       process.exitCode = runSecrets(ctx, has("--init"));
       break;
     case "check-coverage":
-      process.exitCode = runCoverage(ctx, { init: has("--init"), skipRun: has("--skip-run") });
+      process.exitCode = runCoverage(ctx, { init: has("--init"), skipRun: has("--skip-run"), partial: has("--partial") });
       break;
     case "check-bundle-size":
       process.exitCode = runBundleSize(ctx, has("--init"));

@@ -141,10 +141,14 @@ export function collectPerPackage(ctx: Ctx): PkgCoverage[] {
   return out.sort((a, b) => a.pkg.localeCompare(b.pkg));
 }
 
+/** Classify budgeted packages without summaries. Full runs fail on every missing
+ * summary. Partial runs preserve floors only when the caller confirms that the
+ * package manifest still exists; an omitted probe fails closed. */
 export function checkPerPackage(
   perPkg: PkgCoverage[],
   budgets: Budgets,
-): { failures: PkgFailure[]; newPkgs: string[]; stale: string[] } {
+  opts: { partial?: boolean; packageExists?: (pkg: string) => boolean } = {},
+): { failures: PkgFailure[]; newPkgs: string[]; stale: string[]; notRun: string[] } {
   const failures: PkgFailure[] = [];
   const newPkgs: string[] = [];
   const seen = new Set<string>();
@@ -160,8 +164,18 @@ export function checkPerPackage(
       }
     }
   }
-  const stale = Object.keys(budgets.packages).filter((p) => !seen.has(p));
-  return { failures, newPkgs, stale };
+  const unmatched = Object.keys(budgets.packages).filter((p) => !seen.has(p));
+  if (!opts.partial) return { failures, newPkgs, stale: unmatched, notRun: [] };
+  // Fail CLOSED when the caller gives no existence probe. Defaulting to "it exists" would
+  // excuse every unmatched entry and quietly turn --partial into a stale-check off-switch, which
+  // is the failure this whole branch is written to avoid. Defaulting to "it does not" degrades
+  // to ordinary full-run strictness instead, so a caller who forgets the probe gets a loud
+  // wrong answer rather than a silent permissive one.
+  const exists = opts.packageExists ?? (() => false);
+  const stale: string[] = [];
+  const notRun: string[] = [];
+  for (const pkg of unmatched) (exists(pkg) ? notRun : stale).push(pkg);
+  return { failures, newPkgs, stale, notRun };
 }
 
 /** A floor 0.5pt below the measured value, to absorb run-to-run noise. */
@@ -210,8 +224,19 @@ export function coverageScore(perPkg: PkgCoverage[]): string | undefined {
 }
 
 /** Run the coverage guard. Returns the process exit code. `init` seeds the
- *  floors; `skipRun` reads already-produced summaries without re-running. */
-export function runCoverage(ctx: Ctx, opts: { init?: boolean; skipRun?: boolean } = {}): number {
+ *  floors; `skipRun` reads already-produced summaries without re-running;
+ *  `partial` accepts that only some packages were run (see checkPerPackage). */
+export function runCoverage(
+  ctx: Ctx,
+  opts: { init?: boolean; skipRun?: boolean; partial?: boolean } = {},
+): number {
+  if (opts.init && opts.partial) {
+    console.error(
+      "check-coverage: --init cannot be combined with --partial — seeding from a subset " +
+        "would drop the floors of every package that did not run. Re-seed from a full run.",
+    );
+    return 1;
+  }
   const budgetsPath = resolve(ctx.repoRoot, ctx.config.coverage.budgetsPath);
   const testExit = opts.skipRun ? 0 : runTestCoverage(ctx);
 
@@ -253,12 +278,33 @@ export function runCoverage(ctx: Ctx, opts: { init?: boolean; skipRun?: boolean 
   }
 
   const budgets = loadBudgets(readFileSync(budgetsPath, "utf8"), ctx.config.coverage.budgetsPath);
-  const { failures, newPkgs, stale } = checkPerPackage(perPkg, budgets);
+  const { failures, newPkgs, stale, notRun } = checkPerPackage(perPkg, budgets, {
+    partial: opts.partial,
+    // A deleted package can leave a directory containing ignored files.
+    // Its manifest distinguishes an unrun package from those leftovers.
+    packageExists: (pkg) => existsSync(resolve(ctx.repoRoot, pkg, "package.json")),
+  });
 
   if (stale.length > 0) {
     console.error(`${ctx.config.coverage.budgetsPath} lists packages with no coverage summary:`);
     for (const p of stale) console.error(`  - ${p}`);
-    console.error("Remove these entries (or restore the package's coverage).\n");
+    console.error(
+      opts.partial
+        ? "Their package manifests are missing, so this is not just an unrun package. " +
+            "Remove these entries (or restore the package).\n"
+        : "Remove these entries (or restore the package's coverage).\n",
+    );
+  }
+
+  if (notRun.length > 0) {
+    // Reported, not silent: a partial run that covered almost nothing should be visible in the
+    // log rather than looking identical to a full green one.
+    console.error(
+      `check-coverage: --partial — ${perPkg.length} package(s) checked, ` +
+        `${notRun.length} not run this time and holding their existing floors:`,
+    );
+    for (const p of notRun) console.error(`  - ${p}`);
+    console.error("");
   }
 
   if (failures.length > 0) {
