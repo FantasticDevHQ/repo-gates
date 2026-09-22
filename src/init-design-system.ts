@@ -12,7 +12,7 @@ export function eslintConfig(
 // Rule docs: https://github.com/shadcn-ui/lint
 import { plugin as shadcn } from "@shadcn/lint";
 import tsParser from "@typescript-eslint/parser";
-import { designSystemRules, componentDefinitionRules } from "@kellykampen/repo-gates/design-system";
+import { designSystemRules, componentDefinitionRules } from "@fantastic.dev/repo-gates/design-system";
 
 export default [
   { ignores: ${JSON.stringify(["**/node_modules/**", "**/dist/**", "**/out/**", "**/.next/**", "**/coverage/**", "**/.git/**", "**/.worktrees/**", ...ignoredProjects])} },

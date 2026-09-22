@@ -62,12 +62,31 @@ The gates:
 ### Install
 
 ```bash
-pnpm add -D @kellykampen/repo-gates
-# or: npm i -D @kellykampen/repo-gates  /  yarn add -D @kellykampen/repo-gates
+pnpm add -D @fantastic.dev/repo-gates
+# or: npm i -D @fantastic.dev/repo-gates  /  yarn add -D @fantastic.dev/repo-gates
 ```
 
 Ships compiled JS + types — no build step or Node type-stripping required in your
 repo (Node ≥ 18).
+
+### Migrating from @kellykampen/repo-gates
+
+Maintenance has moved to [FantasticDevHQ/repo-gates](https://github.com/FantasticDevHQ/repo-gates)
+and the npm package is now [@fantastic.dev/repo-gates](https://www.npmjs.com/package/@fantastic.dev/repo-gates).
+Replace the dependency using your package manager, for example:
+
+```bash
+pnpm remove @kellykampen/repo-gates
+pnpm add -D @fantastic.dev/repo-gates
+```
+
+Update imports from `@kellykampen/repo-gates` to `@fantastic.dev/repo-gates`,
+including the `/config`, `/design-system`, and `/eslint-boundaries` exports.
+Check existing `eslint.design-system.config.mjs` files too: `init` preserves
+existing configuration files, so it will not rewrite their imports for you.
+The `repo-gates` executable, package scripts, `repo-gates.config.json`, and
+existing baselines continue to work without changes. The old npm package remains
+available for existing installs; new releases use the `@fantastic.dev` scope.
 
 ### Quickstart
 
@@ -185,7 +204,7 @@ create `eslint.design-system.config.mjs`:
 ```js
 import { plugin as shadcn } from "@shadcn/lint";
 import tsParser from "@typescript-eslint/parser";
-import { designSystemRules } from "@kellykampen/repo-gates/design-system";
+import { designSystemRules } from "@fantastic.dev/repo-gates/design-system";
 
 export default [
   { ignores: ["**/node_modules/**", "**/dist/**", "**/.next/**", "**/coverage/**"] },
@@ -226,7 +245,7 @@ arrays replace the defaults in full.
 
 #### Update the rules
 
-The shipped `@kellykampen/repo-gates/design-system` preset is the source of
+The shipped `@fantastic.dev/repo-gates/design-system` preset is the source of
 ESLint defaults. Edit your consumer's `eslint.design-system.config.mjs` and add
 rule overrides **after** `...designSystemRules`. Generated Oxlint setups use
 `.oxlintrc.design-system.json`; edit the rules in its first `overrides` entry,
@@ -401,12 +420,12 @@ The full `RepoGatesConfig` type is exported from the package for editor autocomp
 ### Import boundaries (ESLint)
 
 Architectural import rules are _data_ in `repo-gates.config.json` under `boundaries`;
-the transform `@kellykampen/repo-gates/eslint-boundaries` turns them into
+the transform `@fantastic.dev/repo-gates/eslint-boundaries` turns them into
 `@typescript-eslint/no-restricted-imports` flat configs you spread into your
 `eslint.config.mjs`:
 
 ```js
-import { boundariesToEslintConfigs } from "@kellykampen/repo-gates/eslint-boundaries";
+import { boundariesToEslintConfigs } from "@fantastic.dev/repo-gates/eslint-boundaries";
 import repoGates from "./repo-gates.config.json" with { type: "json" };
 
 export default [
@@ -461,7 +480,7 @@ up to a per-gate turborepo battery with remote caching, live in
 ## Programmatic use
 
 ```ts
-import { loadContext, runCheckAll } from "@kellykampen/repo-gates";
+import { loadContext, runCheckAll } from "@fantastic.dev/repo-gates";
 
 process.exitCode = runCheckAll(loadContext(), { verbose: false });
 ```

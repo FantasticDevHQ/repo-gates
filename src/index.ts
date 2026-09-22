@@ -1,5 +1,5 @@
 /**
- * @kellykampen/repo-gates — config-driven repo quality gates.
+ * @fantastic.dev/repo-gates — config-driven repo quality gates.
  *
  * The engine is repo-agnostic; per-repo policy lives in the consumer's
  * `repo-gates.config.json` (see ./config.ts). Bins under ./bin invoke
