@@ -522,6 +522,39 @@ pnpm run typecheck # tsc --noEmit
 pnpm run build     # tsup → dist/ (esm + d.ts)
 ```
 
+## Releases
+
+[Release Please](https://github.com/googleapis/release-please-action) maintains a
+release PR after changes merge into `main`. It updates `package.json`,
+`CHANGELOG.md`, and `.release-please-manifest.json`. Review and merge that PR to
+create the version tag and GitHub release and publish to npm with trusted
+publishing. No direct push to `main` or npm token is needed.
+
+Use Conventional Commit titles for squash-merged PRs:
+
+| Title prefix | Version change |
+| --- | --- |
+| `fix:`, `docs:`, `perf:` | Patch |
+| `chore:`, `ci:`, `build:`, `refactor:`, `test:`, `revert:` | Patch |
+| `feat:` | Minor |
+| A `!` suffix, such as `feat!:`, or a `BREAKING CHANGE:` footer | Major, including before 1.0 |
+
+Edit `release-please-config.json` to change release policy. The manifest records
+the last released version; let the release PR update it. Do not manually bump
+versions for normal changes. Non-conventional titles may be omitted from releases.
+
+The workflow explicitly dispatches CI for bot-created release PRs because
+GitHub's built-in token does not trigger their normal PR workflows. Publishing
+runs in the same `release.yml` workflow after release creation, rather than
+waiting for a bot-created tag to trigger another run. Release PRs are not
+automatically merged; merging one is the release decision.
+
+If publishing fails after the GitHub release is created, use **Re-run failed
+jobs** on that Release run to retain its release outputs. Check npm first if the
+publish result is uncertain; published versions cannot be overwritten. Manual
+`v*` tags remain supported and must match `package.json`. Keep the workflow named
+`release.yml`, since npm's trusted-publisher configuration uses that filename.
+
 ## License
 
 [MIT](./LICENSE) © Kelly Kampen
