@@ -48,7 +48,7 @@ Commands:
     --shadscan-floor <0-100> Initial score floor (default: 80)
 
 Config: repo-gates.config.json at the repo root (partial overlay on built-in defaults).
-Docs:   https://github.com/kellykampen/repo-gates`;
+Docs:   https://github.com/FantasticDevHQ/repo-gates`;
 
 if (!cmd || has("--help") || has("-h")) {
   console.log(USAGE);

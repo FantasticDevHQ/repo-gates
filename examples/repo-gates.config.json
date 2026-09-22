@@ -57,7 +57,7 @@
     "junitGlobs": ["apps/*/test-results/junit.xml", "packages/*/test-results/junit.xml"]
   },
 
-  "$boundaries_comment": "Architectural import rules -> ESLint, via @kellykampen/repo-gates/eslint-boundaries (see README 'Import boundaries'). ESLint flat config is last-wins per rule, so each file scope is ONE boundary carrying ALL its pattern groups; nested scopes re-include the broader patterns via `extends` instead of copy-paste.",
+  "$boundaries_comment": "Architectural import rules -> ESLint, via @fantastic.dev/repo-gates/eslint-boundaries (see README 'Import boundaries'). ESLint flat config is last-wins per rule, so each file scope is ONE boundary carrying ALL its pattern groups; nested scopes re-include the broader patterns via `extends` instead of copy-paste.",
   "boundaries": [
     {
       "name": "no-cross-app",

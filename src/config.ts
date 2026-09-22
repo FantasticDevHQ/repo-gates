@@ -1,5 +1,5 @@
 /**
- * Per-repo policy for @kellykampen/repo-gates.
+ * Per-repo policy for @fantastic.dev/repo-gates.
  *
  * The engine is repo-agnostic; everything that varies between repos lives
  * here. A consumer repo drops a partial `repo-gates.config.json` at its
