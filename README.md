@@ -7,6 +7,34 @@ secret-shaped strings, shadcn UI quality, coverage, and bundle size, plus a
 CI-parity drift detector and a PR docs-coverage gate. The engine is repo-agnostic; your policy
 lives in a single `repo-gates.config.json`.
 
+## Quick start
+
+Give your coding agent this prompt:
+
+```text
+Read https://github.com/FantasticDevHQ/repo-gates/blob/main/setup.md
+and set up @fantastic.dev/repo-gates in this repository.
+Enable applicable gates, wire check:all into CI, and verify the setup.
+```
+
+The [agent setup guide](https://github.com/FantasticDevHQ/repo-gates/blob/main/setup.md)
+covers inspection, initialization, policy review, and verification.
+
+Or initialize it yourself from the repository root:
+
+```bash
+npm install -D @fantastic.dev/repo-gates
+npx repo-gates init
+npm run check:all
+```
+
+Use your repository's package manager. See [setup commands for npm, pnpm, Yarn,
+and Bun](https://github.com/FantasticDevHQ/repo-gates/blob/main/setup.md#install-and-initialize)
+and the [initialization reference](#quickstart) for details. `init` enables
+applicable gates, including all six design-system rules for Tailwind v4 and
+Shadscan for detected shadcn projects. Review the generated config and any
+existing-code findings before committing.
+
 ## What it does
 
 `check-all` runs an ordered manifest of gates and reports them **quietly** — one
