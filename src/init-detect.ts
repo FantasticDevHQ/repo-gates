@@ -47,7 +47,10 @@ export function detectManager(cwd: string, pkg: Package): Manager {
   ];
   return locks.find(([file]) => existsSync(join(cwd, file)))?.[1] ?? "npm";
 }
-export function discoverProjects(cwd: string, pkg: Package): Project[] {
+export function discoverProjects(
+  cwd: string,
+  pkg: Package,
+): { projects: Project[]; ignoredPatterns: string[] } {
   const workspaceFile = join(cwd, "pnpm-workspace.yaml");
   const workspace = existsSync(workspaceFile)
     ? parse(readFileSync(workspaceFile, "utf8"))
@@ -77,21 +80,29 @@ export function discoverProjects(cwd: string, pkg: Package): Project[] {
         projects.push({ dir, pkg: readJson<Package>(file) });
     }
   }
-  return projects.sort((a, b) => a.dir.localeCompare(b.dir));
+  return {
+    projects: projects.sort((a, b) => a.dir.localeCompare(b.dir)),
+    ignoredPatterns: omitted.map((pattern) => `${pattern}/**`),
+  };
 }
 export function dependency(pkg: Package, name: string): string | undefined {
   return pkg.devDependencies?.[name] ?? pkg.dependencies?.[name];
 }
-export function dependencyVersion(cwd: string, project: Project, name: string): string | undefined {
-  const declared = dependency(project.pkg, name);
+/** Resolve a declared range without turning it into an installed or minimum version. */
+export function dependencyRange(cwd: string, pkg: Package, name: string): string | undefined {
+  const declared = dependency(pkg, name);
   if (!declared) return undefined;
   const workspaceFile = join(cwd, "pnpm-workspace.yaml");
-  let range = declared;
-  if (range.startsWith("catalog:") && existsSync(workspaceFile)) {
+  if (declared.startsWith("catalog:") && existsSync(workspaceFile)) {
     const data = parse(readFileSync(workspaceFile, "utf8"));
-    const catalog = range.slice("catalog:".length);
-    range = (catalog ? data?.catalogs?.[catalog]?.[name] : data?.catalog?.[name]) ?? "";
+    const catalog = declared.slice("catalog:".length);
+    return catalog ? data?.catalogs?.[catalog]?.[name] : data?.catalog?.[name];
   }
+  return declared;
+}
+export function dependencyVersion(cwd: string, project: Project, name: string): string | undefined {
+  const range = dependencyRange(cwd, project.pkg, name);
+  if (!range) return undefined;
   try {
     const require = createRequire(join(cwd, project.dir, "package.json"));
     const version = readJson<{ version: string }>(require.resolve(`${name}/package.json`)).version;

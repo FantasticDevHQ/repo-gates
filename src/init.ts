@@ -9,6 +9,7 @@ import { runDebtMarkers } from "./debt-markers.ts";
 import { runCircularImports } from "./circular-imports.ts";
 import {
   dependency,
+  dependencyRange,
   dependencyVersion,
   detectManager,
   discoverProjects,
@@ -91,7 +92,7 @@ function initialize(cwd: string, options: InitOptions): number {
   const configPath = join(cwd, "repo-gates.config.json");
   const config: Overlay = existsSync(configPath) ? readJson<Overlay>(configPath) : {};
   const manager = detectManager(cwd, pkg);
-  const projects = discoverProjects(cwd, pkg);
+  const { projects, ignoredPatterns } = discoverProjects(cwd, pkg);
   const scripts = { ...pkg.scripts };
   const added: string[] = [];
   const addScript = (name: string, command: string) => {
@@ -148,9 +149,12 @@ function initialize(cwd: string, options: InitOptions): number {
         ...(basename(dir) === "ui" ? [`${prefix}src/components/**`] : []),
       ];
     });
-    const ignoredProjects = projects
-      .filter((p) => p.dir !== "." && !tailwindProjects.includes(p))
-      .map((p) => `${p.dir}/**`);
+    const ignoredProjects = [
+      ...ignoredPatterns,
+      ...projects
+        .filter((p) => p.dir !== "." && !tailwindProjects.includes(p))
+        .map((p) => `${p.dir}/**`),
+    ];
     const file = useOxlint ? OXLINT_CONFIG : ESLINT_CONFIG;
     if (!existsSync(join(cwd, file)))
       filesToWrite.set(
@@ -173,7 +177,10 @@ function initialize(cwd: string, options: InitOptions): number {
       );
   }
   if (useShadscan && !scripts["check:shadscan"]) {
-    if (dependency(pkg, "@shadscan/cli") && dependency(pkg, "@shadscan/cli") !== "0.7.0") {
+    if (
+      dependency(pkg, "@shadscan/cli") &&
+      dependencyRange(cwd, pkg, "@shadscan/cli") !== "0.7.0"
+    ) {
       throw new Error(
         "Existing @shadscan/cli differs from the supported pin 0.7.0. Define your own check:shadscan script or use --no-shadscan.",
       );

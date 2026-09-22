@@ -30,6 +30,44 @@ afterEach(() => {
 });
 
 describe("init", () => {
+  it.each(["eslint", "oxlint"])("excludes negated workspaces from the root %s scope", (linter) => {
+    const dir = fixture({
+      workspaces: ["apps/*", "!apps/ignored"],
+      devDependencies: {
+        tailwindcss: "4.0.0",
+        ...(linter === "oxlint" ? { oxlint: "1.80.0" } : {}),
+      },
+    });
+    mkdirSync(join(dir, "apps/ignored"), { recursive: true });
+    writeFileSync(join(dir, "apps/ignored/package.json"), JSON.stringify({ name: "ignored" }));
+    expect(runInit(dir, { install: false })).toBe(0);
+    if (linter === "oxlint") {
+      expect(read(dir, ".oxlintrc.design-system.json").ignorePatterns).toContain("apps/ignored/**");
+    } else {
+      expect(
+        readFileSync(join(dir, "eslint.design-system.config.mjs"), "utf8").split("files:")[0],
+      ).toContain("apps/ignored/**");
+    }
+  });
+
+  it.each([
+    ["catalog:", 'catalog: { "@shadscan/cli": "0.7.0" }', 0],
+    ["catalog:ui", 'catalogs: { ui: { "@shadscan/cli": "0.7.0" } }', 0],
+    ["catalog:", 'catalog: { "@shadscan/cli": "^0.7.0" }', 1],
+    ["catalog:ui", 'catalogs: { ui: { "@shadscan/cli": "^0.7.0" } }', 1],
+  ] as const)("validates exact Shadscan pins in %s with %s", (reference, yaml, result) => {
+    const dir = fixture({ devDependencies: { "@shadscan/cli": reference } });
+    writeFileSync(join(dir, "pnpm-workspace.yaml"), yaml);
+    writeFileSync(join(dir, "components.json"), "{}");
+    expect(runInit(dir, { install: false })).toBe(result);
+    if (result === 0) {
+      expect(read(dir, "package.json").devDependencies["@shadscan/cli"]).toBe(reference);
+      expect(read(dir, "package.json").scripts["check:shadscan"]).toContain("--fail-under 80");
+    } else {
+      expect(existsSync(join(dir, "repo-gates.config.json"))).toBe(false);
+    }
+  });
+
   it("parses opt-outs and floors and rejects unknown flags", () => {
     expect(parseInitOptions(["--skip-install", "--no-shadscan", "--shadscan-floor=65"])).toEqual({
       install: false,
@@ -91,7 +129,8 @@ describe("init", () => {
     expect(read(dir, "repo-gates.config.json").runner).toBe("pnpm run");
     const config = readFileSync(join(dir, "eslint.design-system.config.mjs"), "utf8");
     expect(config).toContain("apps/web/**");
-    expect(config).not.toContain("apps/ignored/**");
+    expect(config.split("files:")[0]).toContain("apps/ignored/**");
+    expect(config.split("files:")[1]).not.toContain("apps/ignored/**");
   });
 
   it("does not lint Tailwind v3 packages through a Tailwind v4 root scope", () => {
