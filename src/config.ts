@@ -1,5 +1,5 @@
 /**
- * Per-repo policy for @kellykampen/repo-gates.
+ * Per-repo policy for @fantastic.dev/repo-gates.
  *
  * The engine is repo-agnostic; everything that varies between repos lives
  * here. A consumer repo drops a partial `repo-gates.config.json` at its
@@ -138,6 +138,7 @@ export const DEFAULT_CONFIG: RepoGatesConfig = {
   runner: "pnpm run",
   gates: [
     { name: "lint", conditional: false },
+    { name: "check:design-system", conditional: true },
     { name: "format:check", conditional: false },
     { name: "typecheck", conditional: false },
     { name: "check:scripts", conditional: true },

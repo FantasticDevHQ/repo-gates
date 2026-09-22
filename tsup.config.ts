@@ -6,6 +6,7 @@ export default defineConfig({
   entry: {
     index: "src/index.ts",
     config: "src/config.ts",
+    "design-system": "src/design-system.ts",
     "eslint-boundaries": "src/eslint-boundaries.ts",
     "bin/repo-gates": "src/bin/repo-gates.ts",
   },

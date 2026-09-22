@@ -1,6 +1,6 @@
 {
-  "name": "@kellykampen/repo-gates",
-  "version": "0.1.10",
+  "name": "@fantastic.dev/repo-gates",
+  "version": "0.2.3",
   "description": "Config-driven repo quality gates for turborepo (and any) monorepos: a quiet check:all orchestrator, CI-parity drift detector, a PR docs-coverage gate, and ratchet guards (file size, debt markers, circular imports, secrets, coverage, bundle size). The engine is repo-agnostic; policy lives in the consumer repo's config.",
   "keywords": [
     "turborepo",
@@ -18,10 +18,10 @@
   "author": "Kelly Kampen",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kellykampen/repo-gates.git"
+    "url": "git+https://github.com/FantasticDevHQ/repo-gates.git"
   },
-  "homepage": "https://github.com/kellykampen/repo-gates#readme",
-  "bugs": "https://github.com/kellykampen/repo-gates/issues",
+  "homepage": "https://github.com/FantasticDevHQ/repo-gates#readme",
+  "bugs": "https://github.com/FantasticDevHQ/repo-gates/issues",
   "type": "module",
   "engines": {
     "node": ">=18"
@@ -43,10 +43,15 @@
     "./eslint-boundaries": {
       "types": "./dist/eslint-boundaries.d.ts",
       "default": "./dist/eslint-boundaries.js"
+    },
+    "./design-system": {
+      "types": "./dist/design-system.d.ts",
+      "default": "./dist/design-system.js"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "setup.md"
   ],
   "sideEffects": false,
   "publishConfig": {
@@ -59,10 +64,12 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
+    "semver": "^7.8.5",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@types/semver": "^7.8.0",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "vitest": "^2.1.8"

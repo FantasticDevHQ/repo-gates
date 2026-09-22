@@ -73,6 +73,11 @@ jobs:
       - name: Agent-doc validation (AGENTS.md)
         run: pnpm run check:agents
 
+      # Uncomment after configuring @shadcn/lint and defining check:design-system.
+      # Requires Node >=20.19; see the main README for setup.
+      # - name: Design-system rules
+      #   run: pnpm run check:design-system
+
       # Include this step only when package.json defines check:shadscan for a
       # React application that uses shadcn/ui.
       - name: Shadcn UI quality ratchet (Shadscan)
