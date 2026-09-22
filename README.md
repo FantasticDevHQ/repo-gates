@@ -334,6 +334,32 @@ script to avoid checking the same rules twice. Oxlint uses
 See the upstream [setup instructions](https://github.com/shadcn-ui/lint#get-started).
 Keep versions pinned and commit the consumer lockfile for consistent CI results.
 
+### Partial coverage runs
+
+If CI runs tests for only a subset of packages, generate their coverage summaries
+first, then validate them with the installed CLI:
+
+```bash
+pnpm exec repo-gates check-coverage --skip-run --partial
+```
+
+Use your repository's package manager and affected-test command. Clear previous
+coverage reports before generating the current run's summaries; repo-gates reads
+every matching report and does not determine which packages are affected or
+whether reports are fresh.
+
+Measured packages must meet their existing floors, and new packages must meet
+the default floor. A budgeted package without a summary keeps its floor only if
+its `package.json` exists. Missing manifests still fail, even if an ignored
+`node_modules` directory remains. The output lists unrun packages. A run with no
+matching summaries still fails; skip the coverage job upstream when no packages
+need testing.
+
+`--partial` does not verify that every intended package produced coverage. Keep
+periodic full runs to detect missing reports. Without `--partial`, missing
+summaries remain errors. `--init --partial` is rejected before tests run or
+baselines change; initialize coverage floors from a full run.
+
 ## How it finds your repo
 
 Every command resolves the repo root from `process.cwd()` and loads

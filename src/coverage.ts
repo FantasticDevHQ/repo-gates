@@ -141,22 +141,9 @@ export function collectPerPackage(ctx: Ctx): PkgCoverage[] {
   return out.sort((a, b) => a.pkg.localeCompare(b.pkg));
 }
 
-/**
- * Decide what a budget entry with NO coverage summary means.
- *
- * In a full run it means the package is gone from the repository and its floor is dead
- * config — that is the `stale` case, and it must stay a failure or `coverage-budgets.json`
- * silently accumulates entries for packages nobody can lower.
- *
- * In a PARTIAL run (`--partial`, for CI that only ran the affected packages) the same absence
- * usually means "this package was not run", which is expected and must not fail. The two are
- * indistinguishable from the summaries alone, so partial mode does NOT simply switch the check
- * off — it asks the filesystem. A budget entry whose package directory still exists was merely
- * not run; one whose directory is gone is stale exactly as before.
- *
- * That distinction is the whole point. Disabling the stale check under `--partial` would make
- * the flag a way to hide dead floors, and every CI run would use it.
- */
+/** Classify budgeted packages without summaries. Full runs fail on every missing
+ * summary. Partial runs preserve floors only when the caller confirms that the
+ * package manifest still exists; an omitted probe fails closed. */
 export function checkPerPackage(
   perPkg: PkgCoverage[],
   budgets: Budgets,
@@ -243,6 +230,13 @@ export function runCoverage(
   ctx: Ctx,
   opts: { init?: boolean; skipRun?: boolean; partial?: boolean } = {},
 ): number {
+  if (opts.init && opts.partial) {
+    console.error(
+      "check-coverage: --init cannot be combined with --partial — seeding from a subset " +
+        "would drop the floors of every package that did not run. Re-seed from a full run.",
+    );
+    return 1;
+  }
   const budgetsPath = resolve(ctx.repoRoot, ctx.config.coverage.budgetsPath);
   const testExit = opts.skipRun ? 0 : runTestCoverage(ctx);
 
@@ -263,16 +257,6 @@ export function runCoverage(
           "from a failed/partial run. Fix the tests, then re-seed.",
       );
       return testExit;
-    }
-    if (opts.partial) {
-      // Seeding from a partial run would delete every unrun package's floor, silently
-      // dropping the ratchet for most of the repository. --init means "record the whole
-      // baseline", which a partial run cannot supply.
-      console.error(
-        "check-coverage: --init cannot be combined with --partial — seeding from a subset " +
-          "would drop the floors of every package that did not run. Re-seed from a full run.",
-      );
-      return 1;
     }
     const keepDefault = existsSync(budgetsPath)
       ? loadBudgets(readFileSync(budgetsPath, "utf8"), ctx.config.coverage.budgetsPath).default
@@ -296,16 +280,8 @@ export function runCoverage(
   const budgets = loadBudgets(readFileSync(budgetsPath, "utf8"), ctx.config.coverage.budgetsPath);
   const { failures, newPkgs, stale, notRun } = checkPerPackage(perPkg, budgets, {
     partial: opts.partial,
-    // Probe for the package MANIFEST, not the directory. Raised in review on PR #12, which
-    // pointed out that `existsSync(dir)` also returns true for a regular file. That is real,
-    // and the likelier failure is worse: `git rm -r packages/x` leaves the directory behind
-    // whenever it holds gitignored contents, and every workspace package has a node_modules.
-    // So a directory probe would hold a deleted package's floor forever, which is precisely
-    // the dead-floor accumulation --partial is designed not to cause.
-    //
-    // A package.json is what makes a directory a package, so its absence answers the question
-    // being asked rather than a proxy for it. It also covers the file case for free: a regular
-    // file at `packages/x` has no `packages/x/package.json`.
+    // A deleted package can leave a directory containing ignored files.
+    // Its manifest distinguishes an unrun package from those leftovers.
     packageExists: (pkg) => existsSync(resolve(ctx.repoRoot, pkg, "package.json")),
   });
 
@@ -314,7 +290,7 @@ export function runCoverage(
     for (const p of stale) console.error(`  - ${p}`);
     console.error(
       opts.partial
-        ? "Their package directories are gone, so this is not just an unrun package. " +
+        ? "Their package manifests are missing, so this is not just an unrun package. " +
             "Remove these entries (or restore the package).\n"
         : "Remove these entries (or restore the package's coverage).\n",
     );

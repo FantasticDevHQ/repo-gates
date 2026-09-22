@@ -1,7 +1,7 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_CONFIG, type Ctx } from "./config.ts";
 import {
   checkPerPackage,
@@ -220,6 +220,37 @@ describe("runCoverage --partial: the REAL existence probe", () => {
       }),
     );
     expect(runCoverage(ctxFor(root), { skipRun: true, partial: true })).toBe(1);
+  });
+
+  it("rejects partial initialization before executing coverage or collecting summaries", () => {
+    const root = repoWith([{ dir: "packages/a", manifest: true }]);
+    const before = readFileSync(join(root, "coverage-budgets.json"), "utf8");
+    writeFileSync(join(root, "runner.cjs"), 'require("node:fs").writeFileSync("ran", "yes"); process.exit(7);');
+    const ctx = ctxFor(root);
+    ctx.config.runner = `${process.execPath} runner.cjs`;
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      expect(runCoverage(ctx, { partial: true, init: true })).toBe(1);
+      expect(existsSync(join(root, "ran"))).toBe(false);
+      expect(error).toHaveBeenCalledWith(expect.stringContaining("--init cannot be combined with --partial"));
+      expect(readFileSync(join(root, "coverage-budgets.json"), "utf8")).toBe(before);
+    } finally {
+      error.mockRestore();
+    }
+  });
+
+  it("reports a missing manifest when an unrun package directory remains", () => {
+    const root = repoWith([
+      { dir: "packages/a", manifest: true, summary: [100, 100] },
+      { dir: "packages/b", manifest: false },
+    ]);
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      expect(runCoverage(ctxFor(root), { skipRun: true, partial: true })).toBe(1);
+      expect(error).toHaveBeenCalledWith(expect.stringContaining("package manifests are missing"));
+    } finally {
+      error.mockRestore();
+    }
   });
 
   it("refuses --init together with --partial", () => {
