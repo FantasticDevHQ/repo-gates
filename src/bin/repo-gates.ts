@@ -15,7 +15,7 @@ import { runCoverage } from "../coverage.ts";
 import { runDebtMarkers } from "../debt-markers.ts";
 import { runDocsCoverage } from "../docs-coverage.ts";
 import { runFileSizes } from "../file-sizes.ts";
-import { runInit } from "../init.ts";
+import { parseInitOptions, runInit } from "../init.ts";
 import { runQualityMetrics, runTestTiming } from "../report.ts";
 import { runSecrets } from "../secrets.ts";
 import { runValidateAgents } from "../validate-agents.ts";
@@ -41,19 +41,28 @@ Commands:
   check-ci-parity           Fail if CI workflows drift from the check:all manifest
   report-test-timing        Non-gating test-timing dashboard (→ stdout / step summary)
   report-quality-metrics    Non-gating code-quality dashboard
-  init                      Scaffold repo-gates.config.json + gates/ into the current repo
+  init                      Configure applicable gates, scripts, baselines, and UI tooling
+    --skip-install          Write dependencies/configs without running the package manager
+    --no-design-system      Skip automatic @shadcn/lint setup
+    --no-shadscan            Skip automatic Shadscan setup
+    --shadscan-floor <0-100> Initial score floor (default: 80)
 
 Config: repo-gates.config.json at the repo root (partial overlay on built-in defaults).
 Docs:   https://github.com/kellykampen/repo-gates`;
 
-if (!cmd || cmd === "--help" || cmd === "-h") {
+if (!cmd || has("--help") || has("-h")) {
   console.log(USAGE);
   process.exit(cmd ? 0 : 1);
 }
 
 // `init` runs BEFORE loadContext — there is no config yet in a fresh repo.
 if (cmd === "init") {
-  process.exitCode = runInit(process.cwd());
+  try {
+    process.exitCode = runInit(process.cwd(), parseInitOptions(argv.slice(1)));
+  } catch (error) {
+    console.error(`repo-gates init: ${error instanceof Error ? error.message : String(error)}`);
+    process.exitCode = 1;
+  }
 } else {
   const ctx = loadContext();
   switch (cmd) {

@@ -19,6 +19,12 @@ The Shadscan step is only for React repositories using shadcn/ui; omit it unless
 `package.json` defines the pinned `check:shadscan` script described in the main
 README.
 
+For Tailwind v4 repositories, the workflows also include a commented optional
+`check:design-system` step. Configure `@shadcn/lint` and define the script using
+the main README's [design-system setup](../../README.md#add-design-system-checks-with-shadcnlint),
+then uncomment that step. Node 20.19+ is required. The minimal workflow picks up
+the script automatically through `check-all`, unless you replaced its gate manifest.
+
 ## Why break `check-all` into individual steps at all?
 
 `repo-gates check-all` alone (the `minimal.yml` shape) already runs the whole
