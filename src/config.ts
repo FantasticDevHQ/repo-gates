@@ -138,6 +138,7 @@ export const DEFAULT_CONFIG: RepoGatesConfig = {
   runner: "pnpm run",
   gates: [
     { name: "lint", conditional: false },
+    { name: "check:design-system", conditional: true },
     { name: "format:check", conditional: false },
     { name: "typecheck", conditional: false },
     { name: "check:scripts", conditional: true },

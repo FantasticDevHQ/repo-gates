@@ -43,6 +43,10 @@
     "./eslint-boundaries": {
       "types": "./dist/eslint-boundaries.d.ts",
       "default": "./dist/eslint-boundaries.js"
+    },
+    "./design-system": {
+      "types": "./dist/design-system.d.ts",
+      "default": "./dist/design-system.js"
     }
   },
   "files": [
@@ -59,10 +63,12 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
+    "semver": "^7.8.5",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@types/semver": "^7.8.0",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "vitest": "^2.1.8"

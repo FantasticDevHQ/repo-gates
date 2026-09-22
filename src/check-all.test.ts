@@ -1,11 +1,15 @@
-import { describe, expect, it } from "vitest";
-import type { GateSpec } from "./config.ts";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { describe, expect, it, vi } from "vitest";
+import { DEFAULT_CONFIG, type GateSpec } from "./config.ts";
 import {
   extractFailureSignatures,
   extractScores,
   formatGateLine,
   formatScoresBlock,
   resolveGates,
+  runCheckAll,
 } from "./check-all.ts";
 
 const GATES: GateSpec[] = [
@@ -16,6 +20,35 @@ const GATES: GateSpec[] = [
 ];
 
 describe("resolveGates", () => {
+  it("skips design-system checks when the consumer has no script", () => {
+    expect(resolveGates({}, DEFAULT_CONFIG.gates)).not.toContain("check:design-system");
+  });
+
+  it.each([0, 1])("runs the consumer design-system gate and propagates exit %i", (code) => {
+    const dir = mkdtempSync(join(tmpdir(), "repo-gates-design-"));
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      const scripts = Object.fromEntries(
+        DEFAULT_CONFIG.gates
+          .filter((gate) => !gate.conditional)
+          .map((gate) => [gate.name, 'node -e "process.exit(0)"']),
+      );
+      scripts["check:design-system"] = `node -e "process.exit(${code})"`;
+      writeFileSync(join(dir, "package.json"), JSON.stringify({ scripts }));
+      expect(runCheckAll({ repoRoot: dir, config: { ...DEFAULT_CONFIG, runner: "npm run" } })).toBe(
+        code,
+      );
+      expect(log.mock.calls.some(([line]) => String(line).includes("check:design-system"))).toBe(
+        true,
+      );
+    } finally {
+      log.mockRestore();
+      error.mockRestore();
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("keeps every core gate even when the repo does not define it", () => {
     expect(resolveGates({}, GATES)).toEqual(["lint", "typecheck", "check:ci-parity"]);
   });
