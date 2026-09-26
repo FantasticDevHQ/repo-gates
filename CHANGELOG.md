@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.0...v0.3.1) (2026-09-26)
+
+
+### Documentation
+
+* drop migration notes for the old personal package ([#20](https://github.com/FantasticDevHQ/repo-gates/issues/20)) ([91f9610](https://github.com/FantasticDevHQ/repo-gates/commit/91f96102d0056da72f58ec69b9dae4d9cb07917b))
+
 ## [0.3.0](https://github.com/FantasticDevHQ/repo-gates/compare/v0.2.3...v0.3.0) (2026-09-22)
 
 
