@@ -44,10 +44,6 @@ before verification. `--no-design-system` and `--no-shadscan` skip setup when th
 user requests it or a documented compatibility constraint requires it; they do
 not remove existing gates. Report any gate you could not configure.
 
-If upgrading from `@kellykampen/repo-gates`, follow the
-[migration instructions](https://github.com/FantasticDevHQ/repo-gates#migrating-from-kellykampenrepo-gates),
-including updating imports in existing generated lint configs.
-
 ## Review the configuration
 
 Review the diff before running the complete suite:
