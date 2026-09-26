@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.1...v0.3.2) (2026-09-26)
+
+
+### Maintenance
+
+* **deps:** update dependencies, pnpm and GitHub Actions ([#22](https://github.com/FantasticDevHQ/repo-gates/issues/22)) ([cae2a19](https://github.com/FantasticDevHQ/repo-gates/commit/cae2a1906cd6f2a332df37d874a01181f5f1e064))
+
 ## [0.3.1](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.0...v0.3.1) (2026-09-26)
 
 
