@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.3...v0.3.4) (2026-09-26)
+
+
+### Continuous Integration
+
+* **release:** open release PRs with a GitHub App token ([#26](https://github.com/FantasticDevHQ/repo-gates/issues/26)) ([246f6f2](https://github.com/FantasticDevHQ/repo-gates/commit/246f6f2ec8348f966bd4baa6db666d489630d786))
+
 ## [0.3.3](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.2...v0.3.3) (2026-09-26)
 
 
