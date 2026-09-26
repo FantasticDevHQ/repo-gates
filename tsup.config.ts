@@ -12,7 +12,9 @@ export default defineConfig({
   },
   format: "esm",
   target: "node18",
-  dts: true,
+  // tsup injects `baseUrl` into its dts compile, which TypeScript 6 deprecates.
+  // TypeScript 7 drops the JS API tsup's dts build relies on, so stay on 6.
+  dts: { compilerOptions: { ignoreDeprecations: "6.0" } },
   clean: true,
   sourcemap: false,
   splitting: false,
