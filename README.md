@@ -97,25 +97,6 @@ pnpm add -D @fantastic.dev/repo-gates
 Ships compiled JS + types — no build step or Node type-stripping required in your
 repo (Node ≥ 18).
 
-### Migrating from @kellykampen/repo-gates
-
-Maintenance has moved to [FantasticDevHQ/repo-gates](https://github.com/FantasticDevHQ/repo-gates)
-and the npm package is now [@fantastic.dev/repo-gates](https://www.npmjs.com/package/@fantastic.dev/repo-gates).
-Replace the dependency using your package manager, for example:
-
-```bash
-pnpm remove @kellykampen/repo-gates
-pnpm add -D @fantastic.dev/repo-gates
-```
-
-Update imports from `@kellykampen/repo-gates` to `@fantastic.dev/repo-gates`,
-including the `/config`, `/design-system`, and `/eslint-boundaries` exports.
-Check existing `eslint.design-system.config.mjs` files too: `init` preserves
-existing configuration files, so it will not rewrite their imports for you.
-The `repo-gates` executable, package scripts, `repo-gates.config.json`, and
-existing baselines continue to work without changes. The old npm package remains
-available for existing installs; new releases use the `@fantastic.dev` scope.
-
 ### Quickstart
 
 ```bash
