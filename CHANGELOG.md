@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.2...v0.3.3) (2026-09-26)
+
+
+### Bug Fixes
+
+* **deps:** restore dependency ranges reverted by the 0.3.2 release ([#24](https://github.com/FantasticDevHQ/repo-gates/issues/24)) ([6505c49](https://github.com/FantasticDevHQ/repo-gates/commit/6505c49b4c1195d008dded80d371300b54a7954e))
+
 ## [0.3.2](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.1...v0.3.2) (2026-09-26)
 
 
