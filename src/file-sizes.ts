@@ -40,14 +40,18 @@ function shouldExclude(relPath: string, prefixes: readonly string[]): boolean {
   return prefixes.some((prefix) => relPath.startsWith(prefix));
 }
 
-/** Every scanned source file with its repo-relative posix path + line count. */
+/**
+ * Every scanned file with its repo-relative posix path + line count: the
+ * `fileSize.extensions`, or the source extensions when it has none of its own.
+ */
 export function collectFiles(ctx: Ctx): { rel: string; lines: number }[] {
-  const { scanRoots, excludeDirSegments, excludePathPrefixes, sourceExtensions } = ctx.config;
+  const { scanRoots, excludeDirSegments, excludePathPrefixes, sourceExtensions, fileSize } = ctx.config;
+  const extensions = fileSize.extensions ?? sourceExtensions;
   const out: { rel: string; lines: number }[] = [];
   for (const root of scanRoots) {
     for (const abs of walk(resolve(ctx.repoRoot, root), excludeDirSegments)) {
       const rel = relative(ctx.repoRoot, abs).replaceAll("\\", "/");
-      if (!hasExtension(rel, sourceExtensions)) continue;
+      if (!hasExtension(rel, extensions)) continue;
       if (shouldExclude(rel, excludePathPrefixes)) continue;
       out.push({ rel, lines: countLines(abs) });
     }
