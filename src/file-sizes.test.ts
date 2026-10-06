@@ -43,6 +43,20 @@ describe("file-size scan", () => {
     expect(scan(ctx).failures).toHaveLength(1);
   });
 
+  it("counts fileSize.extensions when set, without other guards' sourceExtensions changing", () => {
+    const { ctx, root } = makeCtx(10);
+    writeLines(root, "src/big.css", 20);
+    writeLines(root, "src/big.ts", 20);
+    expect(scan(ctx).failures.map((f) => f.path)).toEqual(["src/big.ts"]);
+    ctx.config.fileSize.extensions = [...ctx.config.sourceExtensions, ".css"];
+    expect(
+      scan(ctx)
+        .failures.map((f) => f.path)
+        .sort(),
+    ).toEqual(["src/big.css", "src/big.ts"]);
+    expect(ctx.config.sourceExtensions).not.toContain(".css");
+  });
+
   it("reports stale budget entries", () => {
     const { ctx, root } = makeCtx(10);
     writeFileSync(join(root, "budgets.json"), JSON.stringify({ budgets: { "src/gone.ts": 30 } }));

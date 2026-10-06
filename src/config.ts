@@ -42,6 +42,12 @@ export type RepoGatesConfig = {
     threshold: number;
     /** Repo-relative path to the grandfathered per-file budgets JSON. */
     budgetsPath: string;
+    /**
+     * Extensions this guard counts, when they differ from `sourceExtensions`:
+     * e.g. stylesheets, which have a length worth capping but are not source to
+     * the debt or circular-import guards. Defaults to `sourceExtensions`.
+     */
+    extensions?: string[];
   };
   debt: {
     /** Repo-relative path to the grandfathered untracked-marker allowlist. */

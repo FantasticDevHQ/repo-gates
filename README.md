@@ -430,6 +430,7 @@ strictly-valid `repo-gates.config.json` (comments as `"$comment"` keys instead o
 | `sourceExtensions` | `[".ts",".tsx"]` | Extensions the size/debt/circular-import guards treat as source. |
 | `fileSize.threshold` | `600` | Default per-file line ceiling (larger files are grandfathered in the budgets file). |
 | `fileSize.budgetsPath` | `gates/file-size-budgets.json` | Grandfathered per-file budgets (`check-size --init` seeds). |
+| `fileSize.extensions` | `sourceExtensions` | Extensions the size guard counts, when they differ from `sourceExtensions` (e.g. add `".css"`: a stylesheet's length is worth capping, but the debt and circular-import guards cannot read it). |
 | `debt.markerTokens` | `["TODO","FIXME","HACK","XXX"]` | Tokens that must carry a tracker reference. |
 | `debt.trackerPatterns` | `ABC-123`, `#123`, URL | Regex sources for a valid tracker reference. |
 | `debt.allowlistPath` | `gates/debt-marker-allowlist.json` | Untracked-marker allowlist (`check-debt --init` seeds). |
