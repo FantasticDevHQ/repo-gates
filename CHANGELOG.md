@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.3...v0.4.0) (2026-10-06)
+
+
+### Features
+
+* **check-size:** fileSize.extensions counts files beyond the source extensions ([#28](https://github.com/FantasticDevHQ/repo-gates/issues/28)) ([ca6edab](https://github.com/FantasticDevHQ/repo-gates/commit/ca6edaba8e29d5e6e3eaf3444ecdc5be591818e9))
+
+
+### Continuous Integration
+
+* **release:** open release PRs with a GitHub App token ([#26](https://github.com/FantasticDevHQ/repo-gates/issues/26)) ([246f6f2](https://github.com/FantasticDevHQ/repo-gates/commit/246f6f2ec8348f966bd4baa6db666d489630d786))
+
 ## [0.3.3](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.2...v0.3.3) (2026-09-26)
 
 
