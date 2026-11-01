@@ -181,6 +181,10 @@ export function validatePullRequest({ title = "", body = "" }, files = []) {
     errors.push(
       "Use `type(scope): TICKET-123 description` or `type: TICKET-123 description`. Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. Example: `fix(auth): JIF-65 correct session expiry`.",
     );
+  const visibleBody = body.replace(/<!--[\s\S]*?(-->|$)/g, "");
+  const checklist = outsideFences(visibleBody).match(/^## Acceptance checklist[ \t]*\n([\s\S]*)$/m);
+  if (!checklist || !/^[-*] \[[ xX]\] \S/m.test(checklist[1]) || visibleBody.lastIndexOf("## Acceptance checklist") < visibleBody.lastIndexOf("## Agent"))
+    errors.push("Include an acceptance checklist after Agent.");
   const found = parseSections((body ?? "").replace(/<!--[\s\S]*?(-->|$)/g, ""));
   for (const name of sections) {
     const matches = found.filter((section) => section.name === name);

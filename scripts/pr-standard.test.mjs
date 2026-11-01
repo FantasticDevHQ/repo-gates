@@ -16,6 +16,8 @@ Validator regression tests passed: https://github.com/JibHQ/jib-factory/actions/
 ## Agent
 - Agent: Codex
 - Session/thread ID: 01a1862e-bdbc-7722-9688-8334e29f6c2f
+## Acceptance checklist
+- [ ] Verify acceptance criteria.
 `;
 
 test("accepts conventional types, optional scopes and breaking-change markers", () => {
@@ -306,4 +308,8 @@ test("requires a UI declaration and uploaded screenshot or video for UI changes"
 
 test("normalizes LF, CRLF and lone CR", () => {
  for (const newline of ["\n", "\r\n", "\r"]) assert.deepEqual(validatePullRequest({title, body:body.replaceAll("\n",newline)}), []);
+});
+
+test("requires an acceptance checklist", () => {
+ assert.ok(validatePullRequest({title,body:body.split("## Acceptance checklist")[0]}).some(error=>error.includes("acceptance checklist")));
 });
