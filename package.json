@@ -60,8 +60,16 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "prepublishOnly": "pnpm run build"
+    "test": "vitest run --maxWorkers=1",
+    "prepublishOnly": "pnpm run build",
+    "test:standard": "node --test --test-concurrency=1 scripts/*.test.mjs scripts/worktree/*.test.mjs",
+    "test:all": "pnpm run test:standard && pnpm test",
+    "check:all": "pnpm run test:all && pnpm run typecheck && pnpm run build",
+    "worktree:setup": "node scripts/worktree/setup.mjs",
+    "worktree:start": "node scripts/worktree/start.mjs",
+    "worktree:stop": "node scripts/worktree/stop.mjs",
+    "worktree:teardown": "node scripts/worktree/teardown.mjs",
+    "worktree:cleanup": "node scripts/worktree/cleanup.mjs"
   },
   "dependencies": {
     "semver": "^7.8.5",

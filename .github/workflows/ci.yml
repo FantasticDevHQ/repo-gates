@@ -6,10 +6,16 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2-ubuntu-2404
+    timeout-minutes: 20
     steps:
+      - name: Runner identity
+        run: echo "Runner $RUNNER_NAME ($RUNNER_OS/$RUNNER_ARCH)"
       - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v6
@@ -19,6 +25,9 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      - name: Validate actual PR metadata (read-only)
+        run: node scripts/verify-pr-metadata.mjs
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -26,7 +35,7 @@ jobs:
         run: pnpm run typecheck
 
       - name: Test
-        run: pnpm test
+        run: pnpm run test:all
 
       - name: Build
         run: pnpm run build

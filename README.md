@@ -1,5 +1,11 @@
 # repo-gates
 
+<img src="https://raw.githubusercontent.com/FantasticDevHQ/fantastic-dev-brand-kit/0ce1aebc3e8418d7e59ce171e117cf9793dd2f3a/assets/brand/logo-mark.svg" width="48" alt="Fantastic.Dev">
+
+[A Fantastic.Dev Project](https://fantastic.dev)
+
+[Development and worktrees](docs/development.md) · [Pull request standard](docs/pull-request-standard.md)
+
 Config-driven quality gates for **turborepo** (and any) monorepos — one quiet
 `check-all` command that runs your whole battery (lint, format, typecheck, tests)
 alongside ratchet guards for file size, tech-debt markers, circular imports,
