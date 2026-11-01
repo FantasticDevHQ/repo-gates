@@ -39,3 +39,18 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+  repository-quality-gates:
+    name: Repository quality gates
+    needs: [build]
+    if: ${{ always() }}
+    runs-on: ubicloud-standard-2-ubuntu-2404
+    timeout-minutes: 5
+    steps:
+      - name: Require all repository checks to succeed
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          echo "Runner $RUNNER_NAME ($RUNNER_OS/$RUNNER_ARCH)"
+          echo "Repository build, typecheck, tests and metadata validation: $BUILD_RESULT"
+          test "$BUILD_RESULT" = success
