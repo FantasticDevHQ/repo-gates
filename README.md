@@ -1,8 +1,33 @@
-# repo-gates
+<p align="center">
+  <a href="https://fantastic.dev"><img src="assets/fantastic-dev-logo.svg" width="80" height="80" alt="Fantastic.Dev" /></a>
+</p>
 
-<img src="https://raw.githubusercontent.com/FantasticDevHQ/fantastic-dev-brand-kit/0ce1aebc3e8418d7e59ce171e117cf9793dd2f3a/assets/brand/logo-mark.svg" width="48" alt="Fantastic.Dev">
+<h1 align="center">Repo Gates</h1>
+
+<p align="center"><strong>One command for repository quality checks and ratchet guards.</strong></p>
+
+<div align="center">
 
 [A Fantastic.Dev Project](https://fantastic.dev)
+
+</div>
+
+<p align="center">
+  <a href="https://fantastic.dev"><img src="https://img.shields.io/badge/Fantastic.dev-94C173?style=for-the-badge&amp;logoColor=0c0e13" alt="Visit Fantastic.Dev" /></a>
+  <a href="https://github.com/FantasticDevHQ"><img src="https://img.shields.io/badge/GitHub-0c0e13?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="Fantastic.Dev on GitHub" /></a>
+  <a href="https://www.youtube.com/@FantasticDevHQ"><img src="https://img.shields.io/badge/YouTube-FF0033?style=for-the-badge&amp;logo=youtube&amp;logoColor=white" alt="Fantastic.Dev on YouTube" /></a>
+  <a href="https://twitter.com/FantasticDevHQ"><img src="https://img.shields.io/badge/Twitter_%2F_X-0c0e13?style=for-the-badge&amp;logo=x&amp;logoColor=white" alt="Fantastic.Dev on Twitter / X" /></a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@fantastic.dev/repo-gates"><img src="https://img.shields.io/npm/v/@fantastic.dev/repo-gates?style=flat-square" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@fantastic.dev/repo-gates"><img src="https://img.shields.io/npm/dm/@fantastic.dev/repo-gates?style=flat-square" alt="npm monthly downloads" /></a>
+  <a href="https://github.com/FantasticDevHQ/repo-gates/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/FantasticDevHQ/repo-gates/ci.yml?branch=main&amp;style=flat-square&amp;label=checks" alt="Repository checks on main" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/FantasticDevHQ/repo-gates?style=flat-square" alt="Repository license" /></a>
+  <a href="https://github.com/FantasticDevHQ/repo-gates/stargazers"><img src="https://img.shields.io/github/stars/FantasticDevHQ/repo-gates?style=flat-square" alt="GitHub stars" /></a>
+</p>
+
+---
 
 [Development and worktrees](docs/development.md) · [Pull request standard](docs/pull-request-standard.md)
 
