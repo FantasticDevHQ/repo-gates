@@ -6,11 +6,7 @@
 
 <p align="center"><strong>One command for repository quality checks and ratchet guards.</strong></p>
 
-<div align="center">
-
-[A Fantastic.Dev Project](https://fantastic.dev)
-
-</div>
+<p align="center">A <a href="https://fantastic.dev">Fantastic.Dev</a> Project</p>
 
 <p align="center">
   <a href="https://fantastic.dev"><img src="https://img.shields.io/badge/Fantastic.dev-94C173?style=for-the-badge&amp;logoColor=0c0e13" alt="Visit Fantastic.Dev" /></a>
@@ -27,6 +23,8 @@
   <a href="https://github.com/FantasticDevHQ/repo-gates/stargazers"><img src="https://img.shields.io/github/stars/FantasticDevHQ/repo-gates?style=flat-square" alt="GitHub stars" /></a>
 </p>
 
+<p align="center"><a href="#quick-start">Quick start</a> · <a href="#have-my-agent-set-this-up">Agent setup</a> · <a href="#how-to-use-it">Usage</a> · <a href="setup.md">Setup guide</a></p>
+
 ---
 
 [Development and worktrees](docs/development.md) · [Pull request standard](docs/pull-request-standard.md)
@@ -40,18 +38,38 @@ lives in a single `repo-gates.config.json`.
 
 ## Quick start
 
-Give your coding agent this prompt:
+### Have my agent set this up
+
+Copy this into your coding agent in the repository where you want quality gates:
 
 ```text
-Read https://github.com/FantasticDevHQ/repo-gates/blob/main/setup.md
-and set up @fantastic.dev/repo-gates in this repository.
-Enable applicable gates, wire check:all into CI, and verify the setup.
+Set up @fantastic.dev/repo-gates in this consuming repository using:
+https://github.com/FantasticDevHQ/repo-gates
+https://github.com/FantasticDevHQ/repo-gates/blob/main/setup.md
+
+Read applicable AGENTS.md/AGENT.md files. Inspect Git status, package manager,
+lockfile, workspace layout, existing quality scripts and CI. Preserve user
+changes and current policy. Install repo-gates as a dev dependency with this
+repository's package manager, then run that manager's repo-gates init command.
+Review generated config, scripts, dependencies and baselines before committing.
+Enable only applicable gates; do not invent a frontend or backend.
+
+Run the resulting check:all command and wire it into the existing CI using the
+repository's required runner provider. Keep existing ratchets and coverage
+floors; do not hide findings or lower thresholds to make the first run pass.
+Verify rerunning init preserves deliberate policy and existing scripts. Report
+the generated files, exact commands, enabled gates, passed checks and any
+existing-code failures that need separate fixes.
 ```
 
 The [agent setup guide](https://github.com/FantasticDevHQ/repo-gates/blob/main/setup.md)
 covers inspection, initialization, policy review, and verification.
 
-Or initialize it yourself from the repository root:
+### Manual setup
+
+Requires Node 18+ and a repository with `package.json`. Detected UI tooling may
+need a newer Node version; see [runtime requirements](#quickstart). Run from the
+consuming repository root:
 
 ```bash
 npm install -D @fantastic.dev/repo-gates
@@ -64,7 +82,9 @@ and Bun](https://github.com/FantasticDevHQ/repo-gates/blob/main/setup.md#install
 and the [initialization reference](#quickstart) for details. `init` enables
 applicable gates, including all six design-system rules for Tailwind v4 and
 Shadscan for detected shadcn projects. Review the generated config and any
-existing-code findings before committing.
+existing-code findings before committing. A successful first run reports a
+passing gate tally. An initial failure identifies findings to fix; it is not a
+reason to lower an established gate.
 
 ## What it does
 
