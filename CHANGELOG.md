@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.1](https://github.com/FantasticDevHQ/repo-gates/compare/v0.4.0...v0.4.1) (2026-11-02)
+
+
+### Documentation
+
+* FANT-123 add the Fantastic.Dev README header ([#32](https://github.com/FantasticDevHQ/repo-gates/issues/32)) ([d6c1dee](https://github.com/FantasticDevHQ/repo-gates/commit/d6c1dee4ba5ef7a36e7b014453e51889abab4c03))
+* FTD-236 expose agent setup and correct attribution ([#33](https://github.com/FantasticDevHQ/repo-gates/issues/33)) ([6b0c1f2](https://github.com/FantasticDevHQ/repo-gates/commit/6b0c1f2982c3083c97f8beede5dc7334618ab23f))
+
+
+### Maintenance
+
+* FANT-110 adopt repository PR and worktree standards ([#29](https://github.com/FantasticDevHQ/repo-gates/issues/29)) ([b6b0071](https://github.com/FantasticDevHQ/repo-gates/commit/b6b0071122d7581d0e5334d274addd8ef4bf6b67))
+
+
+### Continuous Integration
+
+* FANT-110 emit canonical repository quality status ([#31](https://github.com/FantasticDevHQ/repo-gates/issues/31)) ([3e3d0c2](https://github.com/FantasticDevHQ/repo-gates/commit/3e3d0c2d1632ad982815cefbc11aac9f203dd789))
+
 ## [0.4.0](https://github.com/FantasticDevHQ/repo-gates/compare/v0.3.3...v0.4.0) (2026-10-06)
 
 
