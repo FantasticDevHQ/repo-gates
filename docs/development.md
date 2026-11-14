@@ -11,3 +11,8 @@ For a new checkout, fetch origin first, resolve `origin/HEAD`, then use `git wor
 `pnpm test:standard` exercises metadata and lifecycle regressions without installing dependencies. `pnpm check:all` runs the full suite, typecheck and build on UbiCloud. All CI and release jobs must use `ubicloud-standard-2-ubuntu-2404`. A queued job is not proof of runner integration: inspect its actual runner identity and labels and link the successful current-head run in the PR. Metadata enforcement first activates when trusted scripts and workflow reach the base branch; required-status protection must be checked independently, without billing changes.
 
 The canonical `Repository quality gates` job requires the existing `build` job to succeed. It runs even when that dependency fails, cancels or skips, and rejects every result except success. Keep `build` for existing branch protection consumers. Required checks are `PR standard` and `Repository quality gates`; preserve any additional required statuses and review policies. For this backend-free library there is no backend isolation status. Only require `PR standard` after its trusted workflow/scripts reach base and the context has actually emitted; verify both protection and GitHub App identity by API readback.
+
+## npm release recovery
+
+See [npm publishing and recovery](npm-release-recovery.md) for the approved
+publishing runner exception, verification requirements and existing-tag recovery.
