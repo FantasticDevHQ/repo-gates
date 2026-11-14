@@ -75,6 +75,14 @@ jobs:
         with:
           ref: refs/tags/${{ env.RELEASE_TAG }}
 
+      - name: Require checkout to match provenance source
+        env:
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$WORKFLOW_SHA" || {
+            echo "Release tag differs from the workflow source; use a reviewed release at this commit, never move an existing tag." >&2
+            exit 1
+          }
       - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v7
@@ -117,6 +125,14 @@ jobs:
         with:
           ref: refs/tags/${{ env.RELEASE_TAG }}
 
+      - name: Require checkout to match provenance source
+        env:
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$WORKFLOW_SHA" || {
+            echo "Release tag differs from the workflow source; use a reviewed release at this commit, never move an existing tag." >&2
+            exit 1
+          }
       - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v7
