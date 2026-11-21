@@ -628,6 +628,16 @@ runs in the same `release.yml` workflow after release creation, rather than
 waiting for a bot-created tag to trigger another run. Release PRs are not
 automatically merged; merging one is the release decision.
 
+Release PRs meet the [PR standard](docs/pull-request-standard.md) like any other
+PR; the validator has no bot exemption. Whenever Release Please creates or
+updates the release PR, `scripts/release-pr-standard.mjs` amends the release
+commit so its body ends with `No-ticket: automated release` (skipped when already
+present), force-pushes it with a lease using the release App token so CI runs on
+the new head, and appends the required sections, with the workflow run as
+evidence and agent identity, after Release Please's generated body. The generated
+notes, their standalone `---` delimiters and the footer stay unchanged, so Release
+Please still recognizes the merged PR.
+
 If publishing fails after the GitHub release is created, use **Re-run failed
 jobs** on that Release run to retain its release outputs. Check npm first if the
 publish result is uncertain; published versions cannot be overwritten. Manual
