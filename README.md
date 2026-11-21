@@ -572,14 +572,34 @@ import { loadContext, runCheckAll } from "@fantastic.dev/repo-gates";
 process.exitCode = runCheckAll(loadContext(), { verbose: false });
 ```
 
-## Development
+## Contributing
+
+Contributions are welcome. Read the
+[contributing guide](https://github.com/FantasticDevHQ/.github/blob/main/CONTRIBUTING.md)
+and [Code of Conduct](https://github.com/FantasticDevHQ/.github/blob/main/CODE_OF_CONDUCT.md),
+and report vulnerabilities privately as described in the
+[security policy](https://github.com/FantasticDevHQ/.github/blob/main/SECURITY.md).
+
+Source development needs Node.js 22.12 or later (CI uses Node 22; Vitest 5 requires
+`^22.12.0 || ^24.0.0 || >=26.0.0`) and pnpm 12.6.0 (pinned in `package.json`). The
+published package itself still supports Node 18+.
 
 ```bash
-pnpm install
-pnpm test          # vitest
-pnpm run typecheck # tsc --noEmit
-pnpm run build     # tsup → dist/ (esm + d.ts)
+pnpm install --frozen-lockfile
+pnpm run check:all   # metadata and worktree self-tests, vitest, typecheck and build
 ```
+
+Individual steps:
+
+```bash
+pnpm run test:standard # PR-standard and worktree self-tests (node --test)
+pnpm test              # vitest
+pnpm run typecheck     # tsc --noEmit
+pnpm run build         # tsup → dist/ (esm + d.ts)
+```
+
+See [docs/development.md](docs/development.md) for the full workflow. Pull
+requests follow the [PR standard](docs/pull-request-standard.md).
 
 ## Releases
 
@@ -616,4 +636,4 @@ publish result is uncertain; published versions cannot be overwritten. Manual
 
 ## License
 
-[MIT](./LICENSE) © Kelly Kampen
+Licensed under the [MIT License](./LICENSE) © Kelly Kampen.
