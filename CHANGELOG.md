@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.2](https://github.com/FantasticDevHQ/repo-gates/compare/v0.4.1...v0.4.2) (2026-11-28)
+
+
+### Documentation
+
+* **community:** adopt organization community health defaults ([#35](https://github.com/FantasticDevHQ/repo-gates/issues/35)) ([46f7012](https://github.com/FantasticDevHQ/repo-gates/commit/46f7012a0ab003923a63cec16a27c042fffb9abe))
+
+
+### Continuous Integration
+
+* **release:** OSS-43 make release PRs meet the PR standard ([#38](https://github.com/FantasticDevHQ/repo-gates/issues/38)) ([c1d9f57](https://github.com/FantasticDevHQ/repo-gates/commit/c1d9f576770277743aabb8e6387d07b9dbe4f778))
+* **standards:** add the issue standard workflow ([#37](https://github.com/FantasticDevHQ/repo-gates/issues/37)) ([753bf61](https://github.com/FantasticDevHQ/repo-gates/commit/753bf615abfdc71636cae449ab39281ea655877a))
+* **standards:** add the PR standard re-run workflow ([#39](https://github.com/FantasticDevHQ/repo-gates/issues/39)) ([173818e](https://github.com/FantasticDevHQ/repo-gates/commit/173818e39339f9af0b411bc2e2076d9dabbc65b0))
+* **standards:** inherit pull request ticket linkage (OSS-57) ([de7b5cc](https://github.com/FantasticDevHQ/repo-gates/commit/de7b5cc8551d05b4864efccbf6709832eabd0fc4))
+* **standards:** OSS-57 inherit ticket linkage from the pull request ([#40](https://github.com/FantasticDevHQ/repo-gates/issues/40)) ([de7b5cc](https://github.com/FantasticDevHQ/repo-gates/commit/de7b5cc8551d05b4864efccbf6709832eabd0fc4))
+
 ## [0.4.1](https://github.com/FantasticDevHQ/repo-gates/compare/v0.4.0...v0.4.1) (2026-11-02)
 
 
